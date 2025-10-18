@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Country Finder</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style th:inline="text">
+        .currency-eur { color: #28a745; font-weight: bold; }
+        .currency-gbp { color: #dc3545; font-weight: bold; }
+        .currency-pln { color: #6f42c1; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 Country Finder</h1>
+        
+        <div class="search-box">
+            <form th:action="@{/search}" method="post">
+                <input type="text" name="countryName" placeholder="Enter country name (Spain, Poland, UK)" required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <!-- Dynamic classes based on data -->
+        <div th:if="${country}" 
+            th:classappend="|result ${country.currency}|"
+            th:style="|border-left: 4px solid ${country.currency == 'EUR' ? '#28a745' : country.currency == 'GBP' ? '#dc3545' : '#6f42c1'};|">
+            <h3>Country Found!</h3>
+            <p><strong>Name:</strong> <span th:text="${country.name}"></span></p>
+            <p><strong>Capital:</strong> <span th:text="${country.capital}"></span></p>
+            <p><strong>Population:</strong> 
+                <span th:text="${country.population}" 
+                    th:style="${country.population > 50000000 ? 'color: #e74c3c; font-weight: bold;' : ''}">
+                </span>
+            </p>
+            <p><strong>Currency:</strong> 
+                <span th:text="${country.currency}" 
+                    th:class="|currency-${country.currency}|">
+                </span>
+            </p>
+        </div>
+
+        <div th:if="${error}" class="result error">
+            <p th:text="${error}"></p>
+        </div>
+    </div>
+</body>
+</html>
